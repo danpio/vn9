@@ -1,0 +1,7 @@
+vn9 (0.0.3) stable; urgency=low
+
+  * Initial Release.
+
+ -- unknown <daniel@dks.net.pl>  Sun, 23 Feb 2014 01:13:14 +0100
+
+Improved stability and appearance, function button allows next previous, play still does not work - still working on it;)
