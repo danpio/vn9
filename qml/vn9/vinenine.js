@@ -160,8 +160,8 @@ function lista(kategoria,tag,userid2){
     var url=""
 
 
-    var username ="n9@dks.net.pl"
-    var password ="918939032"
+    var username ="daniel@dks.net.pl"
+    var password ="dp191277"
 
 
     var loginUrl =  "https://api.vineapp.com/users/authenticate";

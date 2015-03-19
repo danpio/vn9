@@ -95,7 +95,7 @@ QmlApplicationViewer::~QmlApplicationViewer()
 {
     int i;
     i=system ("rm /home/user/*.mp4");
-  //  qDebug()<<"tmp clean"<<i;
+    qDebug()<<"tmp clean"<<i;
  //  delete d;
 }
 
@@ -163,6 +163,10 @@ void QmlApplicationViewer::setOrientation(ScreenOrientation orientation)
 
 void QmlApplicationViewer::showExpanded()
 {
+    int i;
+    i=system ("rm /home/user/*.mp4");
+    qDebug()<<"tmp clean"<<i;
+
 #if defined(Q_OS_SYMBIAN) || defined(MEEGO_EDITION_HARMATTAN) || defined(Q_WS_SIMULATOR)
     showFullScreen();
 #elif defined(Q_WS_MAEMO_5)

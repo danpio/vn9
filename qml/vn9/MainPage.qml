@@ -30,9 +30,13 @@ Page {
 
         }
     }
-    property int index_wybrany
+
+       property int index_wybrany2:0
+    property int index_wybrany:-1
+    property int index_wybrany_old
     property string wybran_kategoria
     property string share_url
+    property int czy_gra
     tools: commonTools
         id:vine
         width: 480
@@ -113,8 +117,9 @@ State { name: 'loaded'; when: image.status == Image.Ready }
     Text {id:username_ ;text: username; visible:false}
     Text {id:tytul_ ;text: text; visible:false}
     Text {id:id_ ;text: id; visible:false}
-    Video {id: video;x: 40;y: 9;z: 2;width:400; height: 400;autoLoad: false;playing: false; visible: true; fillMode: "PreserveAspectFit"
+    Video {id: video;x: 40;y: 9;z: 2;width:400; height: 400;autoLoad: true;playing: false; visible: true; fillMode: "PreserveAspectFit"
         objectName:"vinevideo";
+
         function myQmlFunction(msg) {
         if(index!=index_wybrany){
             console.log('got some Items'+msg);
@@ -127,38 +132,60 @@ State { name: 'loaded'; when: image.status == Image.Ready }
 
 
 onError: {
+    console.log("errore......")
     indicator3.running=true
     indicator3.visible=true
+    video.play()
 }
 
 onStarted: {
     indicator3.running=false
     indicator3.visible=false
 }
+onPausedChanged: {
+           console.log("pauza")
+
+}
 
 onPositionChanged: {
-       //console.log("onPositionChanged")
+  index_wybrany2=(photoGridView.contentY/400)
 
+if(index_wybrany2!=index_wybrany_old){
+ console.log("jeste w "+index_wybrany2+" old "+index_wybrany_old)
+    video.stop()
+    console.log("/home/user/"+rssModel.get(index_wybrany2).video_url)
+        ramka_avatara.url_avatara=rssModel.get(index_wybrany2).avatarUrl
+       // share_url=rssModel.get(index_wybrany).expanded_url
+        tytul.text=rssModel.get(index_wybrany2).description
+        nazwa_usera.text=rssModel.get(index_wybrany2).username
+        //console.log('got some Items'+msg);
+        video.source="/home/user/"+rssModel.get(index_wybrany2).video_url;
+        video.visible = true;
+        video.play();
+  //  photoGridView.currentIndex=index_wybrany
+    czy_gra=1
+index_wybrany_old=index_wybrany2;
+}else{
+    if(czy_gra==1){
+        console.log("stop")
+        czy_gra=0;
+    }
 }
-onPlayingChanged: {
-     //   console.log("onPlayingChanged")
+    //video.play()
 }
-        onFocusChanged: {
-            console.log("fokus")
-}
-        function cos(){
-
-            console.log("cos")
-        }
-        function aa(){
-
-        }
 
        MouseArea {
+           id: mmmmmmmm
           anchors.fill: parent
-          onMouseYChanged:
-                           {
-if(index!=index_wybrany){
+          onPressedChanged: {
+
+              console.log("aaa")
+          }
+
+          onMouseYChanged:{
+              console.log("klick "+index+" "+index_wybrany)
+if(index!=index_wybrany||czy_gra==0){
+
   video.stop()
     index_wybrany=index
     //vatar_image.source=avatar_.source
@@ -169,17 +196,42 @@ if(index!=index_wybrany){
     nazwa_usera.text=username
 //  ApplicationData.downloadFile(video_url_org);
 
+
     video.source="/home/user/"+video_url;
     video.visible = true;
     video.play();
+czy_gra=1
     console.log(index+" play "+video_url);
           }
                   }
-          onClicked: {index_wybrany=index}
+     //     onClicked: {index_wybrany=index}
 }
                                onStopped: {
                                    video.position = 0;
                                    video.play()
+                                        console.log("klick "+index+" "+index_wybrany2)
+
+                                   if(index_wybrany2!=index){
+                                    console.log("jeste w "+index_wybrany2+" old "+index_wybrany_old)
+                                       video.stop()
+                                       console.log("/home/user/"+rssModel.get(index_wybrany2).video_url)
+                                           ramka_avatara.url_avatara=rssModel.get(index_wybrany2).avatarUrl
+                                          // share_url=rssModel.get(index_wybrany).expanded_url
+                                           tytul.text=rssModel.get(index_wybrany2).description
+                                           nazwa_usera.text=rssModel.get(index_wybrany2).username
+                                           //console.log('got some Items'+msg);
+                                           video.source="/home/user/"+rssModel.get(index_wybrany2).video_url;
+                                           video.visible = true;
+                                           video.play();
+                                     //  photoGridView.currentIndex=index_wybrany
+                                       czy_gra=1
+                                   index_wybrany_old=index_wybrany2;
+                                   }
+
+
+
+
+
                                }
 
                                 onBufferProgressChanged: {
@@ -263,8 +315,10 @@ if(index!=index_wybrany){
         function play_vine(){
             //TO DO guzik play
              //ApplicationData.downloadFile(rssModel.get(index_wybrany).video_url_org);
-            //console.log(rssModel.get(index_wybrany).video_url)
-console.log(video)
+            console.log(rssModel.get(index_wybrany).video_url)
+            //rssModel.set(index_wybrany)
+czy_gra=0
+
 
             index_wybrany=photoGridView.contentY/400
 
@@ -284,6 +338,7 @@ console.log(video)
     }
         function play_next(){
 
+
             if(photoGridView.contentY!=photoGridView.contentHeight-400) photoGridView.contentY+=400
 
         }
@@ -292,7 +347,8 @@ console.log(video)
 if(photoGridView.contentY!=0)photoGridView.contentY-=400
 
         }
-    function lista_end(){
+
+        function lista_end(){
        indicator3.running=false
        indicator3.visible=false
     }
